@@ -18,8 +18,18 @@ import { assert } from './utils/util';
     return;
   }
   
+  // optional, used for the f16 toggle and GPU timings
+  const requiredFeatures: GPUFeatureName[] = [];
+  for (const feature of ['shader-f16', 'timestamp-query'] as GPUFeatureName[]) {
+    if (adapter.features.has(feature)) {
+      requiredFeatures.push(feature);
+    }
+  }
+
   const device = await adapter.requestDevice({
+    requiredFeatures,
     requiredLimits: { 
+      maxBufferSize: adapter.limits.maxBufferSize,
       maxComputeWorkgroupStorageSize: adapter.limits.maxComputeWorkgroupStorageSize,
       maxStorageBufferBindingSize: adapter.limits. maxStorageBufferBindingSize
      },
